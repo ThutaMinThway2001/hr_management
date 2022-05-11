@@ -2,18 +2,24 @@
     @section('title')
     <h4>HR_MANAGEMENT</h4>
     @endsection
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
-                    You're logged in as {{auth()->user()->name}}!
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="text-center">
+                        <img src="{{$employee->profile_img_path()}}" alt="" style="width:100px; height: 100px; border-radius: 100%; border: 1px solid green; padding: 3px; display:inline;" />
+                        <div class="py-3 px-2">
+                            <h2><span>{{$employee->name}}</span> | <span class="text-success" style="font-size: 20px;">{{$employee->phone}}</span></h2>
+                            <p class="text-muted mb-1">{{$employee->employee_id}}</p>
+                            <p class="text-muted mb-1"><span class="badge rounded-pill badge-dark">{{$employee->department? $employee->department->title : '-'}}</span></p>
+
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
         </div>
     </div>

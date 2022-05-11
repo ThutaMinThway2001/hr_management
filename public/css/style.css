@@ -1,8 +1,11 @@
+
+
 .badge {
   border-radius: 1rem;
   font-size: 12px;
   padding: 10px;
 }
+
 
 .action-icon a{
   padding: 5px;
@@ -539,3 +542,21 @@ div.dataTables_wrapper div.dataTables_length, div.dataTables_wrapper div.dataTab
     border-radius: 5px;
     border: 1px solid #ddd;
   }
+
+  .dash-border{
+    border-left: 2px dashed gray;
+  }
+
+  .profile-thumbnail{
+    width: 80%;
+    height: 80%;
+    border-radius: 10%;
+    border: 1px solid #ddd;
+  }
+
+  mark{background:orange;color:black;}
+
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: inline !important;
+    vertical-align: middle;
+}

@@ -5,7 +5,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form action="{{route('employee.update', $employee->id)}}" method="POST" id="edit">
+            <form action="{{route('employee.update', $employee->id)}}" method="POST" id="edit" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="row">
@@ -40,7 +40,7 @@
                             <input type="file" class="form-control p-2" id="profile_img" name="profile_img" />
                             <div class="preview_img my-2">
                                 @if ($employee->profile_img)
-                                <img src="" alt="" />
+                                <img src="{{$employee->profile_img_path()}}" alt="" />
                                 @endif
                             </div>
                         </div>
@@ -136,6 +136,14 @@
                     "maxDate" : moment(),
                     "showDropdowns": true,
                 });
+
+                $('#profile_img').on('change', function(){
+                    var file_length = document.getElementById('profile_img').files.length;
+                    $('.preview_img').html('');
+                    for(var i = 0; i < file_length; i++){
+                        $('.preview_img').append(`<img src='${URL.createObjectURL(event.target.files[i])}' />`)
+                    }
+                })
             })
     </script>
     @endsection

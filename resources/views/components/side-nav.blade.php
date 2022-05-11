@@ -8,14 +8,14 @@
       </div>
       <div class="sidebar-header">
         <div class="user-pic">
-          <img class="img-responsive img-rounded" src="https://raw.githubusercontent.com/azouaoui-med/pro-sidebar-template/gh-pages/src/img/user.jpg"
-            alt="User picture">
+          <img class="img-responsive img-rounded" src="{{auth()->user()->profile_img_path()}}"
+            alt="">
         </div>
         <div class="user-info">
-          <span class="user-name">Jhon
-            <strong>Smith</strong>
+          <span class="user-name">
+            <strong>{{auth()->user()->name}}</strong>
           </span>
-          <span class="user-role">Administrator</span>
+          <span class="user-role">{{auth()->user()->department? auth()->user()->department->title : "No Departments Yet!"}}</span>
           <span class="user-status">
             <i class="fa fa-circle"></i>
             <span>Online</span>

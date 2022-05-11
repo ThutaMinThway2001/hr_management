@@ -1,6 +1,6 @@
 <x-app-layout>
     @section('title')
-    <h4>Employee's Detail</h4>
+    <h4>Profile</h4>
     @endsection
 
     <div class="card">

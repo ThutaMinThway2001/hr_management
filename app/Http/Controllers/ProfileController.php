@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class PageController extends Controller
+class ProfileController extends Controller
 {
     public function index(){
         $employee = auth()->user();
 
-        return view('/dashboard', compact('employee'));
+        return view('profile.profile', compact('employee'));
     }
 }

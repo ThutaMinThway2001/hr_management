@@ -65,7 +65,9 @@ class User extends Authenticatable
     public function profile_img_path()
     {
         if ($this->profile_img) {
-            // return asset('')
+            return asset('storage/' . $this->profile_img);
         }
+
+        return null;
     }
 }

@@ -22,6 +22,14 @@ class EmployeeController extends Controller
     {
         $employees = User::with('department');
         return Databases::of($employees)
+            ->filterColumn('department_name', function($query, $search){
+                $query->whereHas('department', function($query) use($search) {
+                    $query->where('title', 'LIKE', '%'.$search.'%');
+                });
+            })
+            ->editColumn('profile_img', function($employee){
+                return '<img src="'. $employee->profile_img_path() .'" alt="" class="profile-thumbnail"><p class="mb-1">'.$employee->name.'</p>';
+            })
             ->addColumn('department_name', function ($employee) {
                 return $employee->department ? $employee->department->title : '-';
             })
@@ -40,10 +48,11 @@ class EmployeeController extends Controller
             })
             ->addColumn('action', function ($employee) {
                 $edit_icon = '<a href="' . route('employee.edit', $employee->id) . '" class="text-warning"><i class="far fa-edit"></i></a>';
-                $info_icon = '<a href="' . route('employee.show', $employee->id) . '" class="text-warning"><i class="fas fa-info-circle"></i></a>';
-                return '<div class="action-icon">' . $edit_icon . $info_icon . '</div>';
+                $info_icon = '<a href="' . route('employee.show', $employee->id) . '" class="text-primary"><i class="fas fa-info-circle"></i></a>';
+                $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$employee->id.'"><i class="fas fa-trash-alt"></i></a>';
+                return '<div class="action-icon">' . $edit_icon . $info_icon . $delete_icon .'</div>';
             })
-            ->rawColumns(['is_present', 'action'])
+            ->rawColumns(['profile_img','is_present', 'action'])
             ->make(true);
     }
 
@@ -57,7 +66,7 @@ class EmployeeController extends Controller
     public function store(EmployeeRequest $request)
     {
         $attributes = $request->validated();
-        $attributes['profile_img'] = $request->file('profile_img')->store('employee_pf');
+        $attributes['profile_img'] = $request->file('profile_img')->store('employee');
         User::create($attributes);
 
         return redirect()->route('employee.index')->with('create', 'Employee created successfully');
@@ -72,13 +81,26 @@ class EmployeeController extends Controller
     public function update(EmployeeUpdateRequest $request, User $employee)
     {
         $attributes = $request->validated();
-        $employee->update($attributes);
 
+        if($request->hasFile('profile_img')){
+            Storage::delete('storage/' .$employee->profile_img);
+
+            $attributes['profile_img'] = $request->file('profile_img')->store('employee');
+        }
+
+        $employee->update($attributes);
         return redirect()->route('employee.index')->with('updated', 'Updated At Successfully');
+
     }
 
     public function show(User $employee)
     {
         return view('employee.show', compact('employee'));
+    }
+
+    public function destroy(User $employee){
+        $employee->delete();
+
+        return 'success';
     }
 }

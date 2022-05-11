@@ -350,18 +350,6 @@ Make sure disabled buttons don't get the pointer cursor.
    This can trigger a poorly considered lint error in some tools but is included by design.
 */
 
-img,
-svg,
-video,
-canvas,
-audio,
-iframe,
-embed,
-object {
-  display: block; /* 1 */
-  vertical-align: middle; /* 2 */
-}
-
 /*
 Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
 */
@@ -595,6 +583,9 @@ select {
   --tw-backdrop-saturate:  ;
   --tw-backdrop-sepia:  ;
 }
+.visible {
+  visibility: visible;
+}
 .fixed {
   position: fixed;
 }
@@ -622,6 +613,10 @@ select {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 .ml-3 {
   margin-left: 0.75rem;
@@ -667,6 +662,9 @@ select {
 }
 .mt-3 {
   margin-top: 0.75rem;
+}
+.mb-3 {
+  margin-bottom: 0.75rem;
 }
 .mb-0 {
   margin-bottom: 0px;
@@ -1346,3 +1344,14 @@ select {
   }
 }
 
+.image{
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  border: 1px solid #5cb85c;
+  padding: 3px;
+
+}
+.table tbody{
+  vertical-align: middle;
+}

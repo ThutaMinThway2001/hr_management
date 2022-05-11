@@ -26,6 +26,8 @@
     {{-- Date Range --}}
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/datatables.mark.js/2.0.0/datatables.mark.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.10.13/features/mark.js/datatables.mark.min.css">
 </head>
 
 <body class="font-sans antialiased">
@@ -35,10 +37,16 @@
         <div class="app-bar">
             <div class="d-flex justify-content-center">
                 <div class="col-md-8">
-                    <div class="d-flex justify-content-md-between justify-content-sm-between">
+                    <div class="d-flex sm-justify-content-between justify-content-between">
+                        @if (request()->is('dashboard'))
                         <a id="show-sidebar" href="#">
                             <i class="fas fa-bars"></i>
                         </a>
+                        @else
+                        <a id="back-btn" href="#">
+                            <i class="fas fa-angle-left"></i>
+                        </a>  
+                        @endif
                         @yield('title')
                         <a href=""></a>
                     </div>
@@ -54,7 +62,7 @@
             </div>
         </main>
 
-        <div class="bottom-bar">
+        <div class="bottom-bar bg-white">
             <div class="d-flex justify-content-center">
                 <div class="col-md-8">
                     <div class="d-flex justify-content-between">
@@ -70,9 +78,9 @@
                             <i class="fas fa-home"></i>
                             <p class="mb-0">Home</p>
                         </a>
-                        <a href="">
-                            <i class="fas fa-home"></i>
-                            <p class="mb-0">Home</p>
+                        <a href="{{route('profile.profile')}}">
+                            <i class="fas fa-user-alt"></i>
+                            <p class="mb-0">Profile</p>
                         </a>
                     </div>
                 </div>
@@ -105,9 +113,30 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src="{{ url('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/g/mark.js(jquery.mark.min.js),datatables.mark.js"></script>
+    <script src="https://cdn.jsdelivr.net/g/mark.js(jquery.mark.min.js)"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.13/features/mark.js/datatables.mark.js"></script>
     <script>
-        jQuery(function ($) {
+        $(function ($) {
             
+            let token = document.head.querySelector('meta[name="csrf-token"]');
+
+            if (token){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN' : token.content
+                    }
+                });
+            }else{
+                console.log('error');
+            }
+
+            $('#back-btn').on("click", function(e){
+                e.preventDefault();
+                window.history.go(-1);
+            })
+
             $(".sidebar-dropdown > a").click(function() {
             $(".sidebar-submenu").slideUp(200);
             if ( $(this).parent().hasClass("active")) 
@@ -128,7 +157,9 @@
             $("#show-sidebar").click(function() {
             $(".page-wrapper").addClass("toggled");
             });
-            @if(session('create')){
+
+            @if(session('create'))
+            {
                 Swal.fire(
                 'Good job!',
                 'You clicked the button!',
@@ -136,19 +167,24 @@
                 )
             }
             @endif
-
-            @if(session('updated')){
+                
+            @if(session('updated'))
+            {
                 Swal.fire(
-                'Updated Successfully',
-                'You clicked the button!',
-                'success'
-                )
+                    'Updated Successfully',
+                    'You clicked the button!',
+                    'success'
+                    )
             }
             @endif
-});
-    </script>
 
-    @yield('scripts')
+            $.extend(true, $.fn.dataTable.defaults, {
+                mark: true
+            });
+        });
+    </script>
+        @yield('scripts')
+                    
 </body>
 
 </html>
