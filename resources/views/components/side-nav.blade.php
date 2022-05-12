@@ -43,6 +43,13 @@
               </a>
           </li>
 
+          <li>
+            <a href="{{route('departments.index')}}">
+              <i class="fa fa-users"></i>
+              <span>Departments</span>
+            </a>
+          </li>
+
           <li class="sidebar-dropdown">
             <a href="#">
               <i class="fa fa-globe"></i>

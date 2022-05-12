@@ -1,11 +1,11 @@
 <x-app-layout>
     @section('title')
-    <h4>Department</h4>
+    <h4>Role</h4>
     @endsection
 
     <div class="mb-4">
-        <a href="{{route('departments.create')}}" class="btn-theme btn-sm p-2">
-            <i class="fas fa-plus"></i> Create Department
+        <a href="{{route('roles.create')}}" class="btn-theme btn-sm p-2">
+            <i class="fas fa-plus"></i> Create Role
         </a>
     </div>
 
@@ -14,7 +14,7 @@
             <table class="table table-bordered Datatable " style="width:100%;">
                 <thead>
                     <th class="text-center no-order no-search"></th>
-                    <th class="text-center">Title</th>
+                    <th class="text-center">Name</th>
                     <th class="text-center no-order no-search">Action</th>
                     <th class="text-center hidden no-sort no-search ">Updated at</th>
                 </thead>
@@ -31,10 +31,10 @@
                     processing: true,
                     serverSide: true,
                     responsive: true,
-                    ajax: 'department/datatable/ssd',
+                    ajax: 'roles/datatable/ssd',
                     columns: [
                         { data: 'fas fa-plus', name: 'fas fa-plus', class: 'text-center'},
-                        { data: 'title', name: 'title', class: 'text-center' },
+                        { data: 'name', name: 'name', class: 'text-center' },
                         { data: 'action', name: 'action', class: 'text-center' },
                         { data: 'updated_at', name: 'updated_at', class: 'text-center'}
 
@@ -86,7 +86,7 @@
                     if (willDelete) {
                         $.ajax({
                             method: "DELETE",
-                            url: `/departments/${id}`,
+                            url: `/roles/${id}`,
                             data: { name: "John", location: "Boston" }
                             })
                             .done(function( response ) {

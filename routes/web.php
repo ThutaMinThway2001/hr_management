@@ -4,6 +4,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,9 @@ Route::middleware('auth')->group(function(){
 
     Route::resource('departments', DepartmentController::class);
     Route::get('department/datatable/ssd', [DepartmentController::class, 'ssd']);
+
+    Route::resource('roles', RoleController::class);
+    Route::get('roles/datatable/ssd', [RoleController::class, 'ssd']);
 
     Route::get('profile', [ProfileController::class, 'index'])->name('profile.profile');
 });
