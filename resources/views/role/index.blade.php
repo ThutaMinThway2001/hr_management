@@ -15,6 +15,7 @@
                 <thead>
                     <th class="text-center no-order no-search"></th>
                     <th class="text-center">Name</th>
+                    <th class="text-center">Permissions</th>
                     <th class="text-center no-order no-search">Action</th>
                     <th class="text-center hidden no-sort no-search ">Updated at</th>
                 </thead>
@@ -35,6 +36,7 @@
                     columns: [
                         { data: 'fas fa-plus', name: 'fas fa-plus', class: 'text-center'},
                         { data: 'name', name: 'name', class: 'text-center' },
+                        { data: 'permissions', name: 'permissions', class: 'text-center' },
                         { data: 'action', name: 'action', class: 'text-center' },
                         { data: 'updated_at', name: 'updated_at', class: 'text-center'}
 
@@ -42,7 +44,7 @@
                 order: [[3, 'desc']],
                 "columnDefs": [
                     {
-                        "targets": [ 3 ],
+                        "targets": [ 4 ],
                         "visible": false
                     },
                     {

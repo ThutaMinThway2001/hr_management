@@ -86,6 +86,20 @@
                         </div>
 
                         <div class="form-group mb-4">
+                            <label class="form-label" for="form4Example2">Role</label>
+                            <select name="roles[]" class="form-control select-multiple" multiple>
+                                @foreach ($roles as $role)
+                                <option 
+                                    value="{{$role->id}}" 
+                                    @if (in_array($role->id,$old_roles))
+                                        selected
+                                    @endif
+                                    >{{$role->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
                             <label class="form-label" for="form4Example2">Date of join</label>
                             <input type="text" name="date_of_join" class="form-control date_of_join"
                                 value="{{$employee->birthday}}" />

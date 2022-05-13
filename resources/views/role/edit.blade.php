@@ -19,6 +19,21 @@
 
                     </div>
                 </div>
+
+                <div class="row"> 
+                    <label for="">Permissions</label>
+                    @foreach ($permissions as $permission)
+                    <div class="col-md-4 p-3">          
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="permissions[]" id="permission_{{$permission->id}}" value="{{$permission->name}}" 
+                            @if (in_array($permission->id,$old_permissions))
+                                checked
+                            @endif />
+                            <label class="form-check-label" for="permission_{{$permission->id}}">{{$permission->name}}</label>
+                        </div>
+                    </div>
+                    @endforeach
+                </div> 
                 <!-- Submit button -->
                 <button type="submit" class="btn-theme btn-block mb-4 p-2">Update</button>
             </form>

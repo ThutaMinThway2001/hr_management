@@ -45,8 +45,22 @@
 
           <li>
             <a href="{{route('departments.index')}}">
-              <i class="fa fa-users"></i>
+              <i class="fas fa-boxes"></i>
               <span>Departments</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{route('roles.index')}}">
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span>Roles</span>
+            </a>
+          </li>
+
+          <li>
+            <a href="{{route('permissions.index')}}">
+              <i class="fas fa-shield-alt"></i>
+              <span>Permissions</span>
             </a>
           </li>
 

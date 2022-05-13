@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
 use Yajra\Datatables\Datatables as Databases;
 
 class EmployeeController extends Controller
@@ -33,6 +34,14 @@ class EmployeeController extends Controller
             ->addColumn('department_name', function ($employee) {
                 return $employee->department ? $employee->department->title : '-';
             })
+            ->addColumn('role_name', function ($employee) {
+                $output = '';
+
+                foreach($employee->roles as $role){
+                    $output .= '<span class="badge rounded-pill badge-primary">'.$role->name.'</span>';
+                }
+                return $output;
+            })
             ->editColumn('is_present', function ($employee) {
                 if ($employee->is_present === 1) {
                     return '<span class="badge badge-success rounded-pill p-2">Present</span>';
@@ -52,22 +61,25 @@ class EmployeeController extends Controller
                 $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$employee->id.'"><i class="fas fa-trash-alt"></i></a>';
                 return '<div class="action-icon">' . $edit_icon . $info_icon . $delete_icon .'</div>';
             })
-            ->rawColumns(['profile_img','is_present', 'action'])
+            ->rawColumns(['profile_img','is_present', 'action', 'role_name'])
             ->make(true);
     }
 
     public function create()
     {
         $departments = Department::orderBy('title')->get();
+        $roles = Role::all();
 
-        return view('employee.create', compact('departments'));
+        return view('employee.create', compact('departments', 'roles'));
     }
 
     public function store(EmployeeRequest $request)
     {
         $attributes = $request->validated();
         $attributes['profile_img'] = $request->file('profile_img')->store('employee');
-        User::create($attributes);
+        $user = User::create($attributes);
+
+        $user->syncRoles($request->roles);
 
         return redirect()->route('employee.index')->with('create', 'Employee created successfully');
     }
@@ -75,7 +87,9 @@ class EmployeeController extends Controller
     public function edit(User $employee)
     {
         $departments = Department::orderBy('title')->get();
-        return view('employee.edit', compact('employee', 'departments'));
+        $old_roles = $employee->roles->pluck('id')->toArray();
+        $roles = Role::all();
+        return view('employee.edit', compact('employee', 'departments', 'old_roles', 'roles'));
     }
 
     public function update(EmployeeUpdateRequest $request, User $employee)
@@ -89,6 +103,9 @@ class EmployeeController extends Controller
         }
 
         $employee->update($attributes);
+        
+        $employee->syncRoles($request->roles);
+
         return redirect()->route('employee.index')->with('updated', 'Updated At Successfully');
 
     }

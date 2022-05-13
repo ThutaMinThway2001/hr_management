@@ -6,6 +6,7 @@ use App\Http\Requests\StoreRole;
 use App\Http\Requests\UpdateRole;
 
 use Carbon\Carbon;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Yajra\Datatables\Datatables as Databases;
 
@@ -26,46 +27,60 @@ class RoleController extends Controller
             ->addColumn('fas fa-plus', function ($each) {
                 return null;
             })
+            ->addColumn('permissions', function ($each) {
+                $output = '';
+
+                foreach($each->permissions as $permission){
+                    $output .= '<span class="badge rounded-pill badge-primary">'.$permission->name.'</span>';
+                }
+
+                return $output;
+            })
             ->addColumn('action', function ($each) {
                 $edit_icon = '<a href="' . route('roles.edit', $each->id) . '" class="text-warning"><i class="far fa-edit"></i></a>';
                 $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$each->id.'"><i class="fas fa-trash-alt"></i></a>';
                 return '<div class="action-icon">' . $edit_icon . $delete_icon .'</div>';
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['action', 'permissions'])
             ->make(true);
     }
 
     public function create()
     {
-        return view('role.create');
+        $permissions = Permission::all();
+        return view('role.create', compact('permissions'));
     }
 
     public function store(StoreRole $request)
     {
         $attributes = $request->validated();
-        Role::create($attributes);
+        $role = Role::create($attributes);
+        $role->givePermissionTo($request->permissions);
 
         return redirect()->route('roles.index')->with('create', 'Role created successfully');
     }
 
     public function edit(Role $role)
     {
-        return view('role.edit', compact('role'));
+        $old_permissions = $role->permissions->pluck('id')->toArray();
+        $permissions = Permission::all();
+        return view('role.edit', compact('role', 'permissions', 'old_permissions'));
     }
 
     public function update(UpdateRole $request, Role $role)
     {
+        $old_permissions = $role->permissions->pluck('id');
+        
+        $role->revokePermissionTo($old_permissions);
+        
         $attributes = $request->validated();
         $role->update($attributes);
+
+        $role->givePermissionTo($request->permissions);
 
         return redirect()->route('roles.index')->with('updated', 'Role Updated Successfully');
 
     }
-
-    // public function show(Department $department)
-    // {
-    //     return view('departments.show', compact('department'));
-    // }
 
     public function destroy(Role $role){
         $role->delete();
