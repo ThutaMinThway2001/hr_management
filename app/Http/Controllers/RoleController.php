@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRole;
 use App\Http\Requests\UpdateRole;
-
+use App\Models\User;
 use Carbon\Carbon;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -14,6 +14,9 @@ class RoleController extends Controller
 {
     public function index()
     {
+        if(!auth()->user()->can('view_role')) {
+            abort(403, 'message');
+        }
         return view('role.index');
     }
 
@@ -37,8 +40,17 @@ class RoleController extends Controller
                 return $output;
             })
             ->addColumn('action', function ($each) {
-                $edit_icon = '<a href="' . route('roles.edit', $each->id) . '" class="text-warning"><i class="far fa-edit"></i></a>';
-                $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$each->id.'"><i class="fas fa-trash-alt"></i></a>';
+                $edit_icon = '';
+                $delete_icon = '';
+
+                if(auth()->user()->can('edit_role')) {
+                    $edit_icon = '<a href="' . route('roles.edit', $each->id) . '" class="text-warning"><i class="far fa-edit"></i></a>';
+                }
+
+                if(auth()->user()->can('delete_role')) {
+                    $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$each->id.'"><i class="fas fa-trash-alt"></i></a>';
+                }
+
                 return '<div class="action-icon">' . $edit_icon . $delete_icon .'</div>';
             })
             ->rawColumns(['action', 'permissions'])
@@ -47,6 +59,9 @@ class RoleController extends Controller
 
     public function create()
     {
+        if(!auth()->user()->can('create_role')) {
+            abort(403, 'message');
+        }
         $permissions = Permission::all();
         return view('role.create', compact('permissions'));
     }
@@ -62,6 +77,9 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
+        if(!auth()->user()->can('edit_role')) {
+            abort(403, 'message');
+        }
         $old_permissions = $role->permissions->pluck('id')->toArray();
         $permissions = Permission::all();
         return view('role.edit', compact('role', 'permissions', 'old_permissions'));
@@ -83,6 +101,9 @@ class RoleController extends Controller
     }
 
     public function destroy(Role $role){
+        if(!auth()->user()->can('delete_role')) {
+            abort(403, 'message');
+        }
         $role->delete();
 
         return 'success';

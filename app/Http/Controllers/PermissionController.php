@@ -6,7 +6,7 @@ use App\Http\Requests\StorePermission;
 use App\Http\Requests\StoreRole;
 use App\Http\Requests\UpdatePermission;
 use App\Http\Requests\UpdateRole;
-
+use App\Models\User;
 use Carbon\Carbon;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -16,6 +16,9 @@ class PermissionController extends Controller
 {
     public function index()
     {
+        if(!auth()->user()->can('view_permission')) {
+            abort(403, 'message');
+        }
         return view('permission.index');
     }
 
@@ -30,8 +33,17 @@ class PermissionController extends Controller
                 return null;
             })
             ->addColumn('action', function ($each) {
-                $edit_icon = '<a href="' . route('permissions.edit', $each->id) . '" class="text-warning"><i class="far fa-edit"></i></a>';
-                $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$each->id.'"><i class="fas fa-trash-alt"></i></a>';
+                $edit_icon = '';
+                $delete_icon = '';
+
+                if(auth()->user()->can('edit_permission')) {
+                    $edit_icon = '<a href="' . route('permissions.edit', $each->id) . '" class="text-warning"><i class="far fa-edit"></i></a>';
+                }
+
+                if(auth()->user()->can('delete_permission')) {
+                    $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$each->id.'"><i class="fas fa-trash-alt"></i></a>';
+                }
+
                 return '<div class="action-icon">' . $edit_icon . $delete_icon .'</div>';
             })
             ->rawColumns(['action'])
@@ -40,6 +52,9 @@ class PermissionController extends Controller
 
     public function create()
     {
+        if(!auth()->user()->can('create_permission')) {
+            abort(403, 'message');
+        }
         return view('permission.create');
     }
 
@@ -53,6 +68,9 @@ class PermissionController extends Controller
 
     public function edit(Permission $permission)
     {
+        if(!auth()->user()->can('edit_permission')) {
+            abort(403, 'message');
+        }
         return view('permission.edit', compact('permission'));
     }
 
@@ -66,6 +84,9 @@ class PermissionController extends Controller
     }
 
     public function destroy(Permission $permission){
+        if(!auth()->user()->can('delete_permission')) {
+            abort(403, 'message');
+        }
         $permission->delete();
 
         return 'success';

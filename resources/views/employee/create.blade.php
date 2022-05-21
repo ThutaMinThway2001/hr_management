@@ -89,6 +89,11 @@
                         </div>
 
                         <div class="form-group mb-4">
+                            <label class="form-label" for="form4Example2">PinCode</label>
+                            <input type="number" name="pin_code" class="form-control"/>
+                        </div>
+                        
+                        <div class="form-group mb-4">
                             <label class="form-label" for="form4Example2">Password</label>
                             <input type="password" name="password" class="form-control" />
                         </div>

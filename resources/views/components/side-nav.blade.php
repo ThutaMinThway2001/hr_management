@@ -36,33 +36,68 @@
               </a>
           </li>
 
+          @can('view_employee')
           <li>
-              <a href="{{route('employee.index')}}">
-                <i class="fa fa-users"></i>
-                <span>Employees</span>
-              </a>
+            <a href="{{route('employee.index')}}">
+              <i class="fa fa-users"></i>
+              <span>Employees</span>
+            </a>
           </li>
+          @endcan
 
+          @can('view_department')
           <li>
             <a href="{{route('departments.index')}}">
               <i class="fas fa-boxes"></i>
               <span>Departments</span>
             </a>
           </li>
+          @endcan
 
+          @can('view_role')
           <li>
             <a href="{{route('roles.index')}}">
               <i class="fas fa-chalkboard-teacher"></i>
               <span>Roles</span>
             </a>
-          </li>
+          </li>            
+          @endcan
 
+          @can('view_permission')
           <li>
             <a href="{{route('permissions.index')}}">
               <i class="fas fa-shield-alt"></i>
               <span>Permissions</span>
             </a>
           </li>
+          @endcan
+
+          @can('view_attendance')
+          <li>
+            <a href="{{route('attendances.index')}}">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Attendances</span>
+            </a>
+          </li>
+          @endcan
+
+          @can('view_attendance_overview');
+          <li>
+            <a href="{{route('attendance.overview')}}">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Overview</span>
+            </a>
+          </li>
+          @endcan
+
+          @can('view_company_setting')
+          <li>
+            <a href="{{route('company-settings.show', 1)}}">
+              <i class="fas fa-building"></i>
+              <span>Company Settings</span>
+            </a>
+          </li>
+          @endcan
 
           <li class="sidebar-dropdown">
             <a href="#">

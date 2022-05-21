@@ -14,7 +14,13 @@
                             <h2><span>{{$employee->name}}</span> | <span class="text-success" style="font-size: 20px;">{{$employee->phone}}</span></h2>
                             <p class="text-muted mb-1">{{$employee->employee_id}}</p>
                             <p class="text-muted mb-1"><span class="badge rounded-pill badge-dark">{{$employee->department? $employee->department->title : '-'}}</span></p>
-
+                            <p class="text-muted mb-1">
+                                @foreach ($employee->roles as $role)
+                                <span class="badge badge-primary">
+                                    {{$role->name}}
+                                </span>
+                                @endforeach
+                            </p>
                         </div>
                     </div>
 
@@ -38,4 +44,75 @@
             </div>
         </div>
     </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h4>Biometric Authentication</h4>
+            <form id="biometric-register-form">
+                <button type="submit" class="biometric-register-btn">
+                    <i class="fas fa-fingerprint"></i>
+                    <i class="fas fa-plus-circle"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <a href="#" class="btn btn-danger btn-block logout-btn " id="#logout-btn">
+                Logout
+            </a >
+        </div>
+    </div>
+ 
+    @section('scripts')
+        <script>
+            $(document).ready(function(){
+
+                const register = (event) => {
+                    event.preventDefault()
+                    new Larapass({
+                        register: 'webauthn/register',
+                        registerOptions: 'webauthn/register/options'
+                    }).register()
+                    .then(function(response){
+                        Swal.fire(
+                        'Updated Successfully',
+                        'You clicked the button!',
+                        'success'
+                        )
+                    })
+                    .catch(function(response){
+                        console.log(response)
+                    })
+                }
+
+                document.getElementById('biometric-register-form').addEventListener('submit', register)
+
+                $(document).on('click', '.logout-btn', function(event){
+                    event.preventDefault();
+
+                    swal({
+                    title: "Are you sure?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                        url: '/logout',
+                        type: 'POST'
+                    }).done(function(response){
+                        window.location.replace('/profile');
+                    })
+                    }
+                    });
+
+
+                })
+        });
+        </script>
+    @endsection
+
 </x-app-layout>

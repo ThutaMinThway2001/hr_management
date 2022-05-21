@@ -14,7 +14,13 @@
                             <h2><span>{{$employee->name}}</span> | <span class="text-success" style="font-size: 20px;">{{$employee->phone}}</span></h2>
                             <p class="text-muted mb-1">{{$employee->employee_id}}</p>
                             <p class="text-muted mb-1"><span class="badge rounded-pill badge-dark">{{$employee->department? $employee->department->title : '-'}}</span></p>
-
+                            <p class="text-muted mb-1">
+                                @foreach ($employee->roles as $role)
+                                <span class="badge badge-primary">
+                                    {{$role->name}}
+                                </span>
+                                @endforeach
+                            </p>
                         </div>
                     </div>
 

@@ -7,14 +7,16 @@ use App\Http\Requests\UpdateDepartment;
 use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables as Databases;
 
 class DepartmentController extends Controller
 {
     public function index()
     {
+        if(!User::find(auth()->user())->can('view_department')) {
+            abort(403, 'message');
+        }
+
         return view('department.index');
     }
 
@@ -39,6 +41,9 @@ class DepartmentController extends Controller
 
     public function create()
     {
+        if(!User::find(auth()->user())->can('create_department')) {
+            abort(403, 'message');
+        }
         return view('department.create');
     }
 
@@ -52,6 +57,9 @@ class DepartmentController extends Controller
 
     public function edit(Department $department)
     {
+        if(!User::find(auth()->user())->can('edit_department')) {
+            abort(403, 'message');
+        }
         return view('department.edit', compact('department'));
     }
 
@@ -64,12 +72,10 @@ class DepartmentController extends Controller
 
     }
 
-    // public function show(Department $department)
-    // {
-    //     return view('departments.show', compact('department'));
-    // }
-
     public function destroy(Department $department){
+        if(!User::find(auth()->user())->can('delete_department')) {
+            abort(403, 'message');
+        }
         $department->delete();
 
         return 'success';

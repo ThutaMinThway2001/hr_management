@@ -7,6 +7,7 @@ use App\Http\Requests\EmployeeUpdateRequest;
 use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
@@ -16,6 +17,9 @@ class EmployeeController extends Controller
 {
     public function index()
     {
+        if(!User::find(auth()->user())->can('view_employee')) {
+            abort(403, 'message');
+        }
         return view('employee.index');
     }
 
@@ -56,9 +60,22 @@ class EmployeeController extends Controller
                 return null;
             })
             ->addColumn('action', function ($employee) {
-                $edit_icon = '<a href="' . route('employee.edit', $employee->id) . '" class="text-warning"><i class="far fa-edit"></i></a>';
-                $info_icon = '<a href="' . route('employee.show', $employee->id) . '" class="text-primary"><i class="fas fa-info-circle"></i></a>';
-                $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$employee->id.'"><i class="fas fa-trash-alt"></i></a>';
+                $edit_icon = '';
+                $info_icon = '';
+                $delete_icon = '';
+
+                if(User::find(auth()->user())->can('edit_employee')) {
+                    $edit_icon = '<a href="' . route('employee.edit', $employee->id) . '" class="text-warning"><i class="far fa-edit"></i></a>';
+                }
+
+                if(User::find(auth()->user())->can('view_employee')) {
+                    $info_icon = '<a href="' . route('employee.show', $employee->id) . '" class="text-primary"><i class="fas fa-info-circle"></i></a>';
+                }
+
+                if(User::find(auth()->user())->can('delete_employee')) {
+                    $delete_icon = '<a href="#" class="text-danger delete-btn" data-id="'.$employee->id.'"><i class="fas fa-trash-alt"></i></a>';
+                }
+
                 return '<div class="action-icon">' . $edit_icon . $info_icon . $delete_icon .'</div>';
             })
             ->rawColumns(['profile_img','is_present', 'action', 'role_name'])
@@ -67,6 +84,9 @@ class EmployeeController extends Controller
 
     public function create()
     {
+        if(!User::find(auth()->user())->can('create_employee')) {
+            abort(403, 'message');
+        }
         $departments = Department::orderBy('title')->get();
         $roles = Role::all();
 
@@ -75,6 +95,7 @@ class EmployeeController extends Controller
 
     public function store(EmployeeRequest $request)
     {
+        // dd(request()->all());
         $attributes = $request->validated();
         $attributes['profile_img'] = $request->file('profile_img')->store('employee');
         $user = User::create($attributes);
@@ -86,6 +107,9 @@ class EmployeeController extends Controller
 
     public function edit(User $employee)
     {
+        if(!User::find(auth()->user())->can('edit_department')) {
+            abort(403, 'message');
+        }
         $departments = Department::orderBy('title')->get();
         $old_roles = $employee->roles->pluck('id')->toArray();
         $roles = Role::all();
@@ -94,6 +118,7 @@ class EmployeeController extends Controller
 
     public function update(EmployeeUpdateRequest $request, User $employee)
     {
+        // dd(request()->all());
         $attributes = $request->validated();
 
         if($request->hasFile('profile_img')){
@@ -101,7 +126,6 @@ class EmployeeController extends Controller
 
             $attributes['profile_img'] = $request->file('profile_img')->store('employee');
         }
-
         $employee->update($attributes);
         
         $employee->syncRoles($request->roles);
@@ -112,10 +136,16 @@ class EmployeeController extends Controller
 
     public function show(User $employee)
     {
+        if(!User::find(auth()->user())->can('edit_employee')) {
+            abort(403, 'message');
+        }
         return view('employee.show', compact('employee'));
     }
 
     public function destroy(User $employee){
+        if(!User::find(auth()->user())->can('delete_employee')) {
+            abort(403, 'message');
+        }
         $employee->delete();
 
         return 'success';
