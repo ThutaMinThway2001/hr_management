@@ -560,3 +560,22 @@ div.dataTables_wrapper div.dataTables_length, div.dataTables_wrapper div.dataTab
     display: inline !important;
     vertical-align: middle;
 }
+
+#biometric-register-form .biometric-register-btn{
+  padding: 15px;
+  box-shadow: none !important;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+#biometric-register-form i.fa-plus-circle{
+  position: absolute;
+  bottom: 30px;
+  left: 4.6rem;
+}
+
+#biometric-register-form i.fa-fingerprint{
+  font-size: 38px;
+} 
+
+

@@ -75,10 +75,24 @@
                         </div>
 
                         <div class="form-group mb-4">
+                            <label class="form-label" for="form4Example2">Role</label>
+                            <select name="roles[]" class="form-control select-multiple" multiple>
+                                @foreach ($roles as $role)
+                                <option value="{{$role->id}}">{{$role->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-4">
                             <label class="form-label" for="form4Example2">Date of join</label>
                             <input type="text" name="date_of_join" class="form-control date_of_join" />
                         </div>
 
+                        <div class="form-group mb-4">
+                            <label class="form-label" for="form4Example2">PinCode</label>
+                            <input type="number" name="pin_code" class="form-control"/>
+                        </div>
+                        
                         <div class="form-group mb-4">
                             <label class="form-label" for="form4Example2">Password</label>
                             <input type="password" name="password" class="form-control" />

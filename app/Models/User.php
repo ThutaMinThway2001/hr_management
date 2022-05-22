@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use DarkGhostHunter\Larapass\Contracts\WebAuthnAuthenticatable;
+use DarkGhostHunter\Larapass\WebAuthnAuthentication;
 
-class User extends Authenticatable
+class User extends Authenticatable implements WebAuthnAuthenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, WebAuthnAuthentication;
 
     /**
      * The attributes that are mass assignable.
@@ -30,7 +33,8 @@ class User extends Authenticatable
         'department_id',
         'date_of_join',
         'is_present',
-        'profile_img'
+        'profile_img',
+        'pin_code'
     ];
 
     /**

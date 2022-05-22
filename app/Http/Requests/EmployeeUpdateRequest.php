@@ -39,7 +39,8 @@ class EmployeeUpdateRequest extends FormRequest
             'date_of_join' => 'required',
             'is_present' => 'required',
             'password' => 'required',
-            'profile_img' => 'required'
+            'profile_img' => 'required',
+            'pin_code' => ['nullable','min:6','max:6', Rule::unique('users','pin_code')->ignore($id)]
         ];
     }
 }
